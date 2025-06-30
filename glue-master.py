@@ -213,7 +213,8 @@ def persist_data_as_hudi(spark: Any, db_config: dict, s3_bucket_name: str, s3_bu
 
             selected_columns = [col("new.id")] + [col(f"new.{c}") for c in hash_columns] + [col("ods_created_dtm"), col("ods_last_updated_dtm"), col("ods_elt_process_flag")]
             
-            final_df = final_df.select(*selected_columns).drop("record__hash")
+            #final_df = final_df.select(*selected_columns).drop("record__hash")
+            final_df = final_df.select(*selected_columns).drop("record_hash") # should be record_hash
 
         else:
             final_df = s3_df.withColumn("ods_created_dtm", lit(datetime.now(timezone.utc))).withColumn("ods_last_updated_dtm",lit(datetime.now(timezone.utc))).withColumn("ods_elt_process_flag", lit("I"))
